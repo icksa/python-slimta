@@ -54,11 +54,33 @@ class QueueError(SlimtaError):
     pass
 
 
+class QueueCompatibilityError(SlimtaError):
+    """Exception thrown when there is a compatibility mismatch between a core
+    interface and an implementation module, such as when a third-party
+    |QueueStorage| implementation has a different API version from the
+    installed :class:`slimta.queue.QueueStorage` interface.
+
+    """
+
+    def __init__(self, interface, expected, found):
+        msg = 'Incompatible {0!s} version: expected={1!s} found={2!s}' \
+            .format(interface, expected, found)
+        super(SlimtaCompatibilityError, self).__init__(msg)
+
+    @classmethod
+    def check(cls, interface, ):
+        if expected != found:
+            raise cls(interface, expected, found)
+
+
 class QueueStorage(object):
     """Base class to show the interface that classes must implement to be a
     storage mechanism for :class:`Queue`.
 
     """
+
+    expected_api_version = None
+
     def __init__(self):
         pass
 
@@ -209,6 +231,8 @@ class Queue(Greenlet):
                        the ``relay`` object. Default is unlimited.
 
     """
+
+    expected_
 
     def __init__(self, store, relay=None, backoff=None, bounce_factory=None,
                  bounce_queue=None, store_pool=None, relay_pool=None):
