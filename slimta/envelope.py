@@ -176,6 +176,7 @@ class Envelope(object):
             outfp = cStringIO.StringIO()
             Generator(outfp).flatten(data, False)
             data = outfp.getvalue()
+        self.original_data = data
         match = re.search(_HEADER_BOUNDARY, data)
         if not match:
             header_data = data
